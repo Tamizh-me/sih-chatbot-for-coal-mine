@@ -1,17 +1,14 @@
 import together
 
-import logging
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import FAISS
 import gradio as gr
-from pydantic import Extra, Field, root_validator
+from pydantic import Extra, root_validator
 
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 
-from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain.llms.base import LLM
-from langchain.llms.utils import enforce_stop_tokens
 from langchain.utils import get_from_dict_or_env
 TOGETHER_API_KEY= "b1f337fe05b183d0cb0f24fee7b57d19f68dae341beddbfbf65edc7a6b4fdcd5"
 from dotenv import load_dotenv
@@ -51,18 +48,14 @@ class TogetherLLM(LLM):
 B_INST, E_INST = "[INST]", "[/INST]"
 B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"
 DEFAULT_SYSTEM_PROMPT = """\
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
-
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."""
+You are an helpful AI assitant developed by Team TechnogenZ, that answers questions related to rules ans laws applicable to mining industry. If you don't know the answer, just simply mention that the question is not related to provided rulebook. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical. Always use the provided context to answer the query."""
 
 def get_prompt(instruction, new_system_prompt=DEFAULT_SYSTEM_PROMPT ):
     SYSTEM_PROMPT = B_SYS + new_system_prompt + E_SYS
     prompt_template =  B_INST + SYSTEM_PROMPT + instruction + E_INST
     return prompt_template
 
-sys_prompt = """You are a helpful, respectful and honest assistant. Always answer as helpfully as possible using the context text provided. Your answers should only answer the question once and not have any text after the answer is done.
-
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information. """
+sys_prompt = """You are an helpful AI assitant developed by Technogenz that answers questions related to rules ans laws applicable to mining industry. If you don't know the answer, just simply mention that the question is not related to provided rulebook. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical. Always use the provided context to answer the query. """
 
 instruction = """CONTEXT:/n/n {context}/n
 
@@ -135,7 +128,7 @@ def main():
             gr.outputs.Textbox(label="Answer"),
             gr.outputs.Textbox(label="Sources")
         ],
-        live=True,
+        live=False,
         title="Coal Mines Law Chatbot - SIH 1312",
         description="Ask any questions related to coal mines!"
     )
