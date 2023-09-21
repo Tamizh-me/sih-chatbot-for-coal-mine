@@ -1,0 +1,11 @@
+langchain
+huggingface_hub
+python-dotenv
+tiktoken
+PyPDF2 
+pypdf
+InstructorEmbedding
+sentence_transformers
+together
+faiss-cpu
+gradio
